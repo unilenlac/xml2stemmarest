@@ -30,8 +30,8 @@ RUN cd tpen2tei && git checkout xmlrich_tokenization
 
 WORKDIR /home/
 
-COPY shell-scripts/xml2collation.sh.zip /bin/xml2collation.sh.zip
-RUN unzip /bin/xml2collation.sh.zip -d /bin
+COPY shell-scripts/xml2stemmarest.sh.zip /bin/xml2stemmarest.sh.zip
+RUN unzip /bin/xml2stemmarest.sh.zip -d /bin
 
 COPY utils/relations.txt .
 COPY utils/abbr.csv .
@@ -44,4 +44,4 @@ COPY $MSS_PATH ./data
 # the container is ran in interactive mode to keep it alive and let examine the output files
 # you can also run it in detached mode or stop the container after the script ends
 
-CMD /bin/xml2collation.sh /home/data /home/out/ -m && tail -f /dev/null
+CMD /bin/xml2stemmarest.sh /home/data /home/out/ -m && tail -f /dev/null

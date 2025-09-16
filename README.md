@@ -15,8 +15,8 @@ To run the script, you need to have **Docker** or **Podman** installed. You also
 Then you need to clone this repository.
 
 ```
-git clone https://github.com/unilenlac/enlac.git
-cd enlac
+git clone https://github.com/unilenlac/xml2stemmarest.git
+cd xml2stemmarest
 ```
 
 Edit the `docker-compose.yml` file to set the `source` parameter to the path of the folder containing your TEI files. You can also use the default `corpus` folder included in the repository for testing purposes.
