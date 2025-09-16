@@ -37,11 +37,12 @@ MILESTONE_FILE="milestones.csv"
 MILESTONE_JSON="milestones.json"
 ABBR_FILE="abbr.csv"
 INDEX_FILE="index.txt"
-STEMMAREST_FILE="stemmaresturl.txt"
-USER_FILE="user.txt"
-RELATION_FILE="relations.txt"
-DEFAULT_USER="${USER_ACCOUNT}@example.org"
-DEFAULT_URL="http://127.0.0.1:8080/stemmarest"
+STEMMAREST_FILE="/home/stemmaresturl.txt"
+USER_FILE="/home/user.txt"
+RELATION_FILE="/home/relations.txt"
+DEFAULT_USER="${USER_ACCOUNT}"
+DEFAULT_PASS="${DEFAULT_USER_PASS}"
+DEFAULT_URL="http://stemmarest:8080/stemmarest/api"
 
 export STEMMAREST_URL="${STEMMAREST_URL}"
 
@@ -54,6 +55,7 @@ else
     printf "\n$INDEX_FILE file found; number of lines read: `grep -c '' $INDEX_FILE`"
 fi
 
+printf "\nInput folder: $USER_FILE"
 if [ -f $USER_FILE ] # user file exists
 then
     printf "\n$USER_FILE file found; number of lines read: `grep -c '' $USER_FILE`"
@@ -342,7 +344,7 @@ SECONDS=0
 for file in `ls -rt $OUTPUT/3-collatex-input/`
 do
   # -t for token by token: -t -f json >
-  java -jar -Dnashorn.args="--no-deprecation-warning" $COLLATEX $OUTPUT/3-collatex-input/$file -t -f json > $OUTPUT/4-collations/collation-$file
+  java -jar $COLLATEX $OUTPUT/3-collatex-input/$file -t -f json > $OUTPUT/4-collations/collation-$file
   if [ "$MST_FLAG" == "-m" ]; then printf "."; fi
 done
 if (( $SECONDS > 3600 )) ; then
@@ -378,7 +380,8 @@ printf "\nUploading collations to Stemmaweb ($STEMMAREST_URL)...\n"
 if [ ! -f $USER_FILE ] # user file does not exist
 then
   # create file with default user
-  printf "$DEFAULT_USER:$DEFAULT_PASS\n" > $USER_FILE
+  # hash password with sha256 and store in a variable
+  printf "$DEFAULT_USER:$DEFAULT_USER_PASS\n" > $USER_FILE
   printf "\nUser created: $DEFAULT_USER (default)\n"
 fi
 
@@ -388,17 +391,34 @@ then
   printf "token-normal-form:This is a reading with the same normal form.\n" > $RELATION_FILE
 fi
 
-#create user(s)
-# printf "Reading user data from $USER_FILE...\n"
-# if IFS=":" read USER PASSPHRASE
-# then
-#   printf "Creating user <$USER>...\n"
-#   curl --request PUT --header "Content-Type: application/json" --data '{ "role": "user", "id":"'$USER'", "email":"'$USER'", "passphrase":"'$PASSPHRASE'" }' $STEMMAREST_URL/user/$USER > create-user.response
-# fi < $USER_FILE
+# create user(s)
+# user credentials in user.txt (one user per line, format: user:passphrase)
+# password must be passed encrypted with sha256
+# default user is ${USER_ACCOUNT} with password ${DEFAULT_USER_PASS}
+
+printf "Reading user data from $USER_FILE...\n"
+
+IFS=":" read USER PASSPHRASE < $USER_FILE
+
+printf "Checking if user <$USER> exists...\n"
+
+# check if user exists
+if [[ ! -z "$USER" && "$PASSPHRASE" ]]
+then
+  HASH_PASSPHRASE=$(echo -n "$PASSPHRASE" | sha256sum | awk '{print $1}')
+  res_status="$(curl --silent --output /dev/null --write-out "%{http_code}" $STEMMAREST_URL/user/$USER)"
+  if [[ "$res_status" == 204 ]]
+  then
+    printf "Creating user <$USER>...\n"
+    curl --request PUT --header "Content-Type: application/json" --data '{ "role": "admin", "id":"'$USER'", "email":"'$USER'", "passphrase":"'$HASH_PASSPHRASE'" }' $STEMMAREST_URL/user/$USER > create-user.response
+  else
+    printf "User $USER already registered\n"
+  fi
+fi
 
 #create tradition (output folder name)
 TRADITION_NAME="$(date +%F--%H:%M)"
-curl --request POST --form "name=$TRADITION_NAME" --form "public=no" --form "userId=$USER_ACCOUNT" --form "empty=no" $STEMMAREST_URL/tradition > create-tradition.response
+curl --request POST --form "name=$TRADITION_NAME" --form "public=no" --form "userId=$DEFAULT_USER" --form "empty=no" $STEMMAREST_URL/tradition > create-tradition.response
 
 TRADITION_ID=`jq ".tradId" create-tradition.response | sed s/\"//g`
 

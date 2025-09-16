@@ -1,3 +1,9 @@
+# ignore all corpus files an directories except the /data/testdata directory and its contents
+corpus/*
+!corpus/testdata/
+!corpus/testdata/**
+data/
+stemmarest-local-data/
 .vscode/
 .DS_Store/
 .env

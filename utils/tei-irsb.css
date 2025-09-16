@@ -1,0 +1,514 @@
+/* Usage: Add to XML file in the preamble, e.g.,
+ <?xml version="1.0"?>
+ <?xml-stylesheet type="text/css" href="path/to/TEI-IRSB.css"?>
+ <TEI...
+ */
+
+/* default */
+body *:before {
+     content: "tag";
+     font-size: x-small;
+     vertical-align: super;
+     font-style: normal;
+     font-weight: initial;
+}
+body *:after {
+     font-size: x-small;
+     vertical-align: super;
+     font-style: normal;
+     font-weight: initial;
+}
+
+/* tag-specific */
+/* alphabetical order */
+abbr:before {
+     content: "";
+}
+abbr[type=ns] {
+    font-weight: bold;
+    background-color: lightgrey;
+}
+abbr:not([type='ns']){
+    font-style: italic;
+    background-color: orange;
+}
+abbr:not([type='ns']):before {
+    content: "abbr type:"attr(type);
+}
+
+add {
+    background-color: orange;
+    font-weight: bold;
+}
+add:before {
+    content: "add ";
+}
+add[hand]:before {
+    content: "add hand:"attr(hand);
+}
+add[place]:before {
+    content: "add place:"attr(place);
+}
+add[hand][place]:before {
+    content: "add place:"attr(place)" hand:"attr(hand);
+}
+
+c:before {
+    background-color: orange;
+    content: "c";
+}
+
+cb {
+  display: block;
+  margin-top: 1em;
+}
+cb:before {
+    content: "Column "attr(n);
+    color: blue;
+    font-size: initial;
+    margin-left: -1cm;
+    vertical-align: baseline;
+}
+
+change {background-color: lightgray;}
+change:before {
+    background-color: lightgray;
+    content: "change";
+}
+
+choice {
+    background-color: orange;
+}
+choice:before {
+    content: "choice(";
+}
+choice:after {
+    content: ")";
+}
+
+corr {
+    background-color: orange;
+    font-weight: bold;
+}
+corr:before {
+    content: "corr(";
+}
+corr:after {
+    content: ")";
+}
+
+del {
+    font-weight: bold;
+    background-color: orange;
+}
+del[cert=high] {
+    background-color: #CC0000;
+}
+del[cert=medium] {
+    background-color: #FF0000;
+}
+del[cert=low] {
+    background-color: #FF6666;
+}
+del:before {
+    content: "del ";
+}
+del[quantity]:before{
+    content: "del "attr(quantity)" chars";
+}
+del[rend]:before{
+    content: "del: "attr(rend);
+}
+del[quantity][rend]:before{
+    content: "del: "attr(rend)" "attr(quantity)" chars";
+}
+del[atLeast][atMost][rend]:before{
+    content: "del: "attr(rend)" "attr(atLeast)"-"attr(atMost)" chars";
+}
+
+div {
+}
+div:before{
+    content: "div(";
+    background-color: lightgrey;
+}
+div:after{
+    content: ")";
+    background-color: lightgrey;
+}
+
+div > head {
+  display: block;
+  font-size: 120%;
+}
+div > head[type]:before {
+    content: "head: "attr(type)"(";
+    background-color: lightgrey;
+}
+div > head[type]:after {
+    content: ")";
+    background-color: lightgrey;
+}
+
+expan {
+}
+expan:before {
+    content: "expan ";
+}
+expan[cert=high] {
+    background-color: darkgreen;
+}
+expan[cert=medium] {
+    background-color: green;
+}
+expan[cert=low] {
+    background-color: lightgreen;
+}
+
+gap {
+    background-color: orange;
+}
+gap:before {
+    background-color: orange;
+    content: "gap ";
+}
+gap[quantity]:before{
+    content: "gap "attr(quantity)" "attr(unit)"(s)";
+}
+gap[atLeast][atMost]:before{
+    content: "gap "attr(atLeast)"-"attr(atMost)" "attr(unit)"(s)";
+}
+
+handShift {background-color: lightgray;}
+handShift:before {
+    background-color: lightgray;
+    content: "handShift: "attr(hand);
+}
+
+hi {
+    font-size: xx-large;
+    font-weight: bold;
+}
+hi:before {
+    content: "";
+}
+
+lb {
+}
+lb:before {
+  content: "\a";
+  vertical-align: sub;
+  white-space: pre; /* Whitespace is preserved by the browser. Text will only wrap on line breaks. */
+}
+lb[n$="0"]:after{
+    content: attr(n);
+    color: blue;
+    font-size: small;
+    margin-left: -1cm;
+    vertical-align: baseline;
+}
+lb[n$="5"]:after{
+    content: attr(n);
+    color: blue;
+    font-size: small;
+    margin-left: -1cm;
+    vertical-align: baseline;
+}
+
+milestone:before {
+    content: "<"attr(n)">";
+    color: blue;
+    font-size: initial;
+    vertical-align: baseline;
+    font-style: italic;
+    font-weight: bold;
+}
+
+msDesc {
+    display: block;
+    font-size: small;
+    margin-left: 3em;
+    line-height: 1.5;
+}
+
+/* does not work with xml:id! */
+/* msDesc:before {
+    content: "sigil: "attr(xml\:id)"";
+    color:gray;
+    display:block;
+} */
+
+name {background-color: lightgray;}
+name:before {
+    background-color: lightgray;
+    content: "name";
+}
+
+note {
+  display: block;
+  padding: .5em 1.5em 1.5em 1.5em;
+  border: 1px solid black;
+  border-radius: 15px;
+  width: 325px;
+  /*position: relative;*/
+  border: 1px solid #aaaaaa;
+  background: #fafafa;
+}
+note:before {
+    content: "";
+}
+
+num {background-color: lightgray;}
+num:before {
+    background-color: lightgray;
+    content: "num";
+}
+
+p:empty {display: none;}
+p {
+  display: block;
+  counter-increment: myPIndex;
+}
+p:before {
+    content: "Paragraph "counter(myPIndex);
+    color: blue;
+    font-size: initial;
+    margin-left: -1cm;
+    vertical-align: baseline;
+}
+
+pb {
+    display: block;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+pb:before {
+    content: "Folio "attr(n);
+    color: blue;
+    font-size: initial;
+    margin-left: -1cm;
+    vertical-align: baseline;
+}
+
+publicationStmt > * {
+    display: block;
+    font-size: small;
+    margin-left: 3em;
+    line-height: 1.5;
+}
+
+publicationStmt {
+    display: block;
+    margin-top: 1em;
+}
+publicationStmt:before {
+    content: "Publication Statement";
+    font-weight: bold;
+}
+publicationStmt > date:before {
+    content: "date: ";
+    color: gray;
+}
+publicationStmt > publisher:before {
+    content: "publisher: ";
+    color: gray;
+}
+publicationStmt > pubPlace:before {
+    content: "place: ";
+    color: gray;
+}
+
+quote {
+  display: block;
+  padding: .5em 1.5em 1.5em 1.5em;
+  border: 1px solid black;
+  border-radius: 15px;
+  width: 325px;
+  border: 1px solid #aaaaaa;
+}
+quote:before {
+    content: "";
+}
+
+revisionDesc {
+    display: inline;
+    margin-top: 1em;
+    border-radius: 5px;
+    border: 0px solid lightgrey;
+    background: white;
+}
+revisionDesc:before {
+    /* content: "Revision Description"; */
+    font-weight: bold;
+    color: red;
+    content: attr(status);
+    font-size: small;
+    margin-left: 3em;
+}
+
+seg {
+    background-color: orange;
+}
+seg:before {
+    content: "seg(";
+}
+seg[type]:before {
+    content: "seg(type:"attr(type);
+}
+seg:after {
+    content: ")";
+}
+
+sic {
+    background-color: orange;
+    color: red;
+}
+sic:before {
+    content: "sic";
+}
+
+sourceDesc msIdentifier > * {
+    display: block;
+}
+sourceDesc {
+    display: block;
+}
+sourceDesc:before {
+    content: "Source Description";
+    font-weight: bold;
+}
+sourceDesc:after {
+    content: "Revision Status";
+    font-weight: bold;
+}
+sourceDesc country:before {
+    content: "country: ";
+    color: gray;
+}
+sourceDesc collection:before {
+    content: "collection: ";
+    color: gray;
+}
+sourceDesc idno:before {
+    content: "idno: ";
+    color: gray;
+}
+sourceDesc repository:before {
+    content: "repository: ";
+    color: gray;
+}
+sourceDesc settlement:before {
+    content: "settlement: ";
+    color: gray;
+}
+
+space:before {
+    background-color: orange;
+    content: "space";
+}
+space[quantity][unit]:before {
+    content: "space "attr(quantity)" "attr(unit)"(s)";
+}
+space[atLeast][atMost][unit]:before{
+    content: "space "attr(atLeast)"-"attr(atMost)" "attr(unit)"(s)";
+}
+
+subst {
+    background-color: orange;
+}
+subst:before {
+    content: "subst(";
+}
+subst:after {
+    content: ")";
+}
+
+supplied {
+    background-color: green;
+}
+supplied:before {
+    content: "supplied ";
+}
+supplied[resp=editor] {
+    background-color: white;
+    color: blue;
+}
+supplied[resp=editor]:before {
+    content: "";
+}
+
+supplied[cert=high] {
+    font-weight: bolder;
+}
+supplied[cert=medium] {
+    font-weight: initial;
+}
+supplied[cert=low] {
+    font-weight: lighter;
+    background-color: lightgreen;
+}
+
+TEI {
+    display: block;
+    margin-left: 2em;
+    margin-right: 4em;
+    padding: 2.5em;
+    font-family: "Lucida Grande", "Cardo", "Arial Unicode MS","Galilee Unicode Gk", "New Athena Unicode", "Athena Unicode", "Palatino Linotype", "Titus Cyberbit Basic", "Vusillus Old Face", "Alphabetum", "Galatia SIL", "Code 2000", "GentiumAlt", "Gentium", "Minion Pro", "GeorgiaGreek", "Vusillus Old Face Italic", "Everson Mono", "Aristarcoj", "Porson", "Legendum", "Aisa Unicode", "Hindsight Unicode", "Caslon", "Verdana", "Tahoma";
+    font-size: 12pt;
+    background-color: white;
+}
+
+TEI > text {
+  display: block;
+  line-height: 1.5;
+}
+
+teiHeader {
+  display: block;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+titleStmt > * {
+    display:block;
+}
+
+titleStmt > title {
+  display: block;
+  font-family: Arvo, sans-serif;
+  font-weight: normal;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+unclear {
+    background-color: orange;
+}
+unclear:before {
+    background-color: orange;
+    content: "unclear ";
+}
+unclear[quantity]:before{
+    content: "unclear "attr(quantity)" chars";
+}
+unclear[atLeast][atMost]:before{
+    content: "unclear "attr(atLeast)"-"attr(atMost)" chars";
+}
+unclear[quantity][reason]:before {
+    content: "unclear "attr(quantity)" chars reason:"attr(reason);
+}
+unclear[atLeast][atMost][reason][unit]:before{
+    content: "unclear "attr(atLeast)"-"attr(atMost)" chars reason:"attr(reason);
+}
+unclear[quantity][unit]:before{
+    content: "unclear "attr(quantity)" "attr(unit)"(s)";
+}
+unclear[atLeast][atMost][unit]:before{
+    content: "unclear "attr(atLeast)"-"attr(atMost)" "attr(unit)"(s)";
+}
+unclear[quantity][reason][unit]:before {
+    content: "unclear "attr(quantity)" "attr(unit)"(s) reason:"attr(reason);
+}
+unclear[atLeast][atMost][reason][unit]:before{
+    content: "unclear "attr(atLeast)"-"attr(atMost)" "attr(unit)"(s) reason:"attr(reason);
+}

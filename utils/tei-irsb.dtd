@@ -1,0 +1,144 @@
+<!ENTITY % text_model "(#PCDATA|milestone|pb|cb|lb|mod|del|add|choice|subst|gap|unclear|supplied|seg|note|num|quote|abbr|expan|sic|c|hi|handShift|space|name)*">
+<!ENTITY % place_model "(margin-left|margin-right|margin-top|margin-bottom|margin-top-and-left|above|below|inline|inversion-mark)">
+<!ENTITY % hand_model "(manus1|manus2|manus3|corr1|corr2|corr3|corr4|manus1-dubia|manus2-dubia|manus3-dubia|corr1-dubia|corr2-dubia|corr3-dubia|corr4-dubia|incerta)">
+
+<!ELEMENT TEI (teiHeader, text)>
+
+<!ELEMENT teiHeader (fileDesc, revisionDesc)>
+
+<!ELEMENT revisionDesc (change)>
+<!ATTLIST revisionDesc status (transcription-in-progress|
+transcription-finished|
+revision1-in-progress|
+revision1-finished|
+revision2-in-progress|
+revision2-finished|
+approved) #REQUIRED>
+<!ELEMENT change EMPTY>
+
+<!ELEMENT fileDesc (titleStmt, publicationStmt, sourceDesc)>
+<!ELEMENT text (body)>
+
+<!ELEMENT titleStmt (title)>
+<!ELEMENT title (#PCDATA)>
+<!--<!ELEMENT respStmt (resp, name)>
+<!ELEMENT resp (#PCDATA)>-->
+
+<!ELEMENT publicationStmt (publisher, pubPlace, date)>
+<!ELEMENT publisher (#PCDATA)>
+<!ELEMENT pubPlace (#PCDATA)>
+<!ELEMENT date (#PCDATA)>
+
+<!ELEMENT sourceDesc (msDesc)>
+<!ELEMENT msDesc (msIdentifier)>
+<!ATTLIST msDesc xml:id ID #REQUIRED>
+<!ELEMENT msIdentifier (country, settlement, repository, collection, idno)>
+<!ELEMENT country (#PCDATA)>
+<!ELEMENT settlement (#PCDATA)>
+<!ELEMENT repository (#PCDATA)>
+<!ELEMENT collection (#PCDATA)>
+<!ELEMENT idno (#PCDATA)>
+
+<!ELEMENT p %text_model;>
+<!ATTLIST p type (space|lb|character) #IMPLIED>
+
+<!ELEMENT milestone EMPTY>
+<!ATTLIST milestone n CDATA #REQUIRED>
+
+<!ELEMENT handShift EMPTY>
+<!ATTLIST handShift hand %hand_model; #REQUIRED>
+
+<!ELEMENT body (pb|cb|lb|head|div)*>
+
+<!ELEMENT pb EMPTY>
+<!ATTLIST pb n CDATA #REQUIRED>
+
+<!ELEMENT cb EMPTY>
+<!ATTLIST cb n CDATA #REQUIRED>
+
+<!ELEMENT lb EMPTY>
+<!ATTLIST lb n CDATA #IMPLIED>
+<!ATTLIST lb break CDATA #FIXED "no">
+
+<!ELEMENT head %text_model;>
+<!ATTLIST head type (initial|final|intermediate) #REQUIRED>
+<!ATTLIST head place %place_model; #IMPLIED>
+<!ATTLIST head hand %hand_model; #IMPLIED>
+
+<!ELEMENT div (pb|cb|head|p|note|gap|milestone|div)*>
+
+<!ELEMENT sic %text_model;>
+<!ELEMENT corr %text_model;>
+
+<!ELEMENT hi (#PCDATA|choice|unclear)*>
+
+<!ELEMENT name %text_model;>
+
+<!ELEMENT c EMPTY>
+<!ATTLIST c type (justif) #REQUIRED>
+
+<!ELEMENT del (#PCDATA|pb|cb|lb|choice|unclear|subst|add)*>
+<!ATTLIST del rend (strike|overstrike|scratched|dotted|underline|inversion-mark|other) #REQUIRED>
+<!ATTLIST del hand %hand_model; #IMPLIED>
+<!ATTLIST del quantity CDATA #IMPLIED>
+<!ATTLIST del atLeast CDATA #IMPLIED>
+<!ATTLIST del atMost CDATA #IMPLIED>
+<!ATTLIST del unit CDATA #IMPLIED>
+
+<!ELEMENT add %text_model;>
+<!ATTLIST add place %place_model; #REQUIRED>
+<!ATTLIST add hand %hand_model; #REQUIRED>
+<!ATTLIST add type (rewriting) #IMPLIED>
+<!ATTLIST add rend (inversion-mark|sign) #IMPLIED>
+
+<!ELEMENT choice ((unclear, supplied+)|(sic, corr)|(abbr, expan+)|(seg, seg))>
+
+<!ELEMENT supplied (#PCDATA|choice|abbr|pb|lb|cb|num)*>
+<!ATTLIST supplied cert (low|medium|high) #REQUIRED>
+
+<!ELEMENT subst ((del, lb?, add, add?)| (add, lb?, del))>
+<!ATTLIST subst type (rewriting) #IMPLIED>
+
+<!ELEMENT gap EMPTY>
+<!ATTLIST gap quantity CDATA #IMPLIED>
+<!ATTLIST gap atLeast CDATA #IMPLIED>
+<!ATTLIST gap atMost CDATA #IMPLIED>
+<!ATTLIST gap unit CDATA #FIXED "character">
+
+
+<!ELEMENT space EMPTY>
+<!ATTLIST space quantity CDATA #IMPLIED>
+<!ATTLIST space atLeast CDATA #IMPLIED>
+<!ATTLIST space atMost CDATA #IMPLIED>
+<!ATTLIST space unit CDATA #FIXED "character">
+
+<!ELEMENT unclear EMPTY>
+<!ATTLIST unclear reason (deletion|damage|illegible|other|reproduction) #REQUIRED>
+<!ATTLIST unclear quantity CDATA #IMPLIED>
+<!ATTLIST unclear atLeast CDATA #IMPLIED>
+<!ATTLIST unclear atMost CDATA #IMPLIED>
+<!ATTLIST unclear unit CDATA #FIXED "character">
+
+<!ELEMENT seg %text_model;>
+<!ATTLIST seg type (lectio|order-number|reading-date|devotional) #REQUIRED>
+<!ATTLIST seg hand %hand_model; #IMPLIED>
+<!ATTLIST seg place %place_model; #IMPLIED>
+<!ATTLIST seg rend (sign) #IMPLIED>
+<!ATTLIST seg notation CDATA #IMPLIED>
+
+<!ELEMENT note %text_model;>
+<!ATTLIST note type (editorial|scribal) #REQUIRED>
+<!ATTLIST note place %place_model; #IMPLIED>
+<!ATTLIST note hand %hand_model; #IMPLIED>
+
+<!ELEMENT num %text_model;>
+<!ATTLIST num value CDATA #REQUIRED>
+<!ATTLIST num type (ordinal) #IMPLIED>
+
+<!ELEMENT quote %text_model;>
+
+<!ELEMENT abbr (#PCDATA|lb|cb|pb|unclear|add|choice|subst)*>
+<!ATTLIST abbr type (ns|other) #REQUIRED>
+
+<!ELEMENT expan (#PCDATA|lb|cb|pb)*><!-- pour les cas où le mot dont l'expansion est discuté se trouve sur deux lignes, par ex Arc. Cap. St Pierre A7 f. 199v l. 35-36-->
+<!ATTLIST expan cert (low|medium|high) #IMPLIED>

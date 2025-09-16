@@ -1,23 +1,37 @@
-version: '3.2'
-
+version: '3.8'
 services:
   stemmarest:
-    image: unilenlac/stemmarest
+    image: unilenlac/stemmarest:1.2-tomcat9-jdk17
     ports:
       - 8080:8080
+    networks:
+      - stemmaweb
 
   stemmaweb:
-    image: unilenlac/stemmaweb
+    image: unilenlac/stemmaweb:1.2-ubuntu-18.04
     ports:
       - 3000:3000
     depends_on:
       - stemmarest
+    networks:
+      - stemmaweb
 
   enlacpipeline:
-    image: unilenlac/pipeline
+    image: enlac-pipeline-image
+    environment:
+      - STEMMAREST_URL=${STEMMAREST_URL}
+      - USER_ACCOUNT=${USER_ACCOUNT}
+      - DEFAULT_USER_PASS=${DEFAULT_USER_PASS}
+      - COLLATEX_VERSION=${COLLATEX_VERSION}
+      - STEMMAREST_URL=${STEMMAREST_URL}
     depends_on:
       - stemmarest
     volumes:
       - type: bind
-        source: .
-        target: /home
+        source: ./corpus/testdata/
+        target: /home/data
+    networks:
+      - stemmaweb
+networks:
+  stemmaweb:
+    driver: bridge
