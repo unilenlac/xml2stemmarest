@@ -4,7 +4,7 @@ Simple bash script to build and upload collations to a [Stemmarest backend](http
 
 The script can only handle TEI files that comply with the [TEI Manuscript Encoding Guidelines](https://tei-c.org/guidelines/customization/manuscript/) and the ENLAC DTD specification (see `testdata/` for examples and the `/utils/tei-irsb.dtd` file).
 
-As it includes a docker-compose orchestration file, this repo can also be used to deploy a Stemmaweb app and backend with a preloaded collation from a set of TEI files.
+As it includes a docker-compose orchestration file, this repo can also be used to deploy a [Stemmaweb](https://github.com/unilenlac/stemmaweb) app and backend with a preloaded collation from a set of TEI files.
 
 ## Installation & Setup
 
